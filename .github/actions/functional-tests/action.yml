@@ -4,5 +4,8 @@ description: Functional Tests
 runs:
   using: "composite"
   steps:
-    - run: ./.ci/scripts/test.sh
+    - run: -
+        trap 'cat log.txt' err
+        bash ./.ci/scripts/test.sh
+        trap - err
       shell: bash

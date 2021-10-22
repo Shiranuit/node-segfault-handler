@@ -10,7 +10,9 @@ function bar() {
 
 function main() {
     segfaultHandler.registerHandler();
-    foo();
+    if (process.env['TEST_SEGFAULT']) {
+        foo();
+    }
 }
 
 main();
