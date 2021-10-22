@@ -1,0 +1,10 @@
+name: Build SegfaultHandler
+description: Build SegfaultHandler node module
+
+runs:
+  using: "composite"
+  steps:
+    - run: npm install
+      shell: bash
+    - run: node-gyp build
+      shell: bash
