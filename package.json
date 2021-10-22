@@ -4,7 +4,8 @@
   "description": "A C++ node-js module that shows the stacktrace of what's causing the segfault",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node-gyp build"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,6 @@
   "homepage": "https://github.com/Shiranuit/node-segfault-handler#readme",
   "dependencies": {
     "bindings": "^1.5.0",
-    "nan": "^2.15.0",
-    "segfault-handler": "^1.3.0"
+    "nan": "^2.15.0"
   }
 }
