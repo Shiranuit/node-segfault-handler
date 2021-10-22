@@ -4,7 +4,7 @@ description: Functional Tests
 runs:
   using: "composite"
   steps:
-    - run: -
+    - run: |
         trap 'cat log.txt' err
         bash ./.ci/scripts/test.sh
         trap - err
