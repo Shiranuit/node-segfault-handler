@@ -17,6 +17,7 @@ jobs:
       - uses: ./.github/actions/build-module
 
   functional-tests:
+    needs: [build-module]
     name: Functional Tests - Node.js v${{ matrix.node-version }}
     runs-on: ubuntu-18.04
     strategy:
@@ -27,4 +28,4 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: ./.github/actions/build-module
+      - uses: ./.github/actions/functional-tests
