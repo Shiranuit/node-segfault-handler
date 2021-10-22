@@ -6,8 +6,15 @@
         "<!(node -e \"require('nan')\")"
       ],
       "sources": ["src/segfault-handler.cc"],
-      "cflags": [ "-Wno-misleading-indentation" ],
+      "cflags": [ "-O0", "-funwind-tables" ],
       "cflags_cc!": [ "-fno-exceptions" ],
+      "conditions": [
+        [ 'OS=="linux"', {
+          "libraries": [
+            "-lunwind"
+          ],
+        }]
+      ]
     }
   ]
 }

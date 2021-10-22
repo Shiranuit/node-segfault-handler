@@ -1,25 +1,39 @@
 #include <stdio.h>
-#include <execinfo.h>
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <nan.h>
 
-#define MAX_STACK_FRAMES 255
+#define UNW_LOCAL_ONLY
+#include <libunwind.h>
 
 void segfault_handler(int sig) {
-  void *stack_frames[MAX_STACK_FRAMES];
+  unw_cursor_t cursor;
+  unw_context_t context;
+
   pid_t pid = getpid();
-
-  size_t frames_count = backtrace(stack_frames, MAX_STACK_FRAMES);
-
-  if (frames_count == MAX_STACK_FRAMES) {
-    fprintf(stderr, "Stack trace too large, truncated to %llu frames.", frames_count);
-  }
-
   // print out all the frames to stderr
   fprintf(stderr, "PID %d received a SIGSEGV\n", pid);
-  backtrace_symbols_fd(stack_frames, frames_count, STDERR_FILENO);
+   // Initialize cursor to current frame for local unwinding.
+  unw_getcontext(&context);
+  unw_init_local(&cursor, &context);
+
+  // Unwind frames one by one, going up the frame stack.
+  while (unw_step(&cursor) > 0) {
+    unw_word_t offset, pc;
+    unw_get_reg(&cursor, UNW_REG_IP, &pc);
+    if (pc == 0) {
+      break;
+    }
+    printf("0x%lx:", pc);
+
+    char sym[256];
+    if (unw_get_proc_name(&cursor, sym, sizeof(sym), &offset) == 0) {
+      fprintf(stderr, " (%s+0x%lx)\n", sym, offset);
+    } else {
+      fprintf(stderr," -- error: unable to obtain symbol name for this frame\n");
+    }
+  }
   exit(1);
 }
 

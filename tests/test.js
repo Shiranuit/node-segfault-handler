@@ -1,4 +1,4 @@
-let segfaultHandler = require('../index');
+let segfaultHandler = require(`${__dirname}/../index`);
 
 function foo() {
   bar();

@@ -1,0 +1,25 @@
+name: Build and Run
+description: Build and Run an image
+
+inputs:
+  IMAGE:
+    description: Docker image
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - run: npm install
+      shell: bash
+    - run: docker build -t segfault-handler-${{ inputs.IMAGE }} ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
+      shell: bash
+    - run: |
+        trap 'cat log.txt' err
+        docker run segfault-handler-${{ inputs.IMAGE }} 2> log.txt
+        cat log.txt | grep -P 'PID \d+ received a SIGSEGV'
+        trap - err
+      shell: bash  
+      
+
+    
