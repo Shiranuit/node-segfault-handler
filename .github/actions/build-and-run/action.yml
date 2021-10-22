@@ -1,0 +1,27 @@
+name: Build and Run
+description: Build and Run an image
+
+inputs:
+  IMAGE:
+    description: Docker image
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - run: sudo apt-get install libunwind-dev
+      shell: bash
+    - run: npm install
+      shell: bash
+    - run: docker build -t segfault-handler-${{ inputs.IMAGE }} -f ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
+      shell: bash
+    - run: |
+        docker run segfault-handler-${{ inputs.IMAGE }} 2> log.txt || true;
+        trap 'cat log.txt' err;
+        cat log.txt | grep -P 'PID \d+ received a SIGSEGV';
+        trap - err;
+      shell: bash  
+      
+
+    
