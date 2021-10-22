@@ -18,7 +18,7 @@ void segfault_handler(int sig) {
   }
 
   // print out all the frames to stderr
-  fprintf(stderr, "PID %d received a SIGSEGV", pid);
+  fprintf(stderr, "PID %d received a SIGSEGV\n", pid);
   backtrace_symbols_fd(stack_frames, frames_count, STDERR_FILENO);
   exit(1);
 }
