@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        node-version: ['14.17.0', '12.16.3', '12.20.0']
+        node-version: ['12.18.1']
         image: ['alpine']
     steps:
       - uses: actions/checkout@v2

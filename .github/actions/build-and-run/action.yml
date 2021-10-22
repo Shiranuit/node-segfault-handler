@@ -14,7 +14,7 @@ runs:
       shell: bash
     - run: npm install
       shell: bash
-    - run: docker build -t segfault-handler-${{ inputs.IMAGE }} ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
+    - run: docker build -t segfault-handler-${{ inputs.IMAGE }} -f ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
       shell: bash
     - run: |
         docker run segfault-handler-${{ inputs.IMAGE }} 2> log.txt || true;
