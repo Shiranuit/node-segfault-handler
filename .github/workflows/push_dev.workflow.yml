@@ -6,8 +6,8 @@ on:
       - develop
 
 jobs:
-  build-module:
-    name: Build SegfaultHandler module - Node.js v${{ matrix.node-version }}
+  functional-tests:
+    name: Functional Tests - Node.js v${{ matrix.node-version }}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -17,4 +17,21 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: ./.github/actions/build-module
+      - uses: ./.github/actions/functional-tests
+
+  build-and-run:
+    needs: [functional-tests]
+    name: Build and Run ${{ matrix.image }} image - Node.js v${{ matrix.node-version }}
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: ['12.18.1']
+        image: ['alpine']
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: ./.github/actions/build-and-run
+        with:
+          IMAGE: ${{ matrix.image }} 
