@@ -25,7 +25,7 @@ void segfault_handler(int sig) {
     if (pc == 0) {
       break;
     }
-    printf("0x%lx:", pc);
+    fprintf(stderr, "0x%lx:", pc);
 
     char sym[256];
     if (unw_get_proc_name(&cursor, sym, sizeof(sym), &offset) == 0) {
