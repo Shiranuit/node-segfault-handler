@@ -9,7 +9,7 @@ runs:
     - run: npm install
       shell: bash
     - run: |
-        node tests/test.js 2> log.txt
+        node tests/test.js 2> log.txt;
         trap 'cat log.txt' err
         cat log.txt | grep -P 'PID \d+ received a SIGSEGV'
         trap - err
