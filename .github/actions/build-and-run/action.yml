@@ -10,6 +10,8 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - run: sudo apt-get install libunwind-dev
+      shell: bash
     - run: npm install
       shell: bash
     - run: docker build -t segfault-handler-${{ inputs.IMAGE }} ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
