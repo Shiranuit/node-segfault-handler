@@ -1,18 +1,16 @@
 let segfaultHandler = require('../index');
 
 function foo() {
-    bar();
+  bar();
 }
 
 function bar() {
-    segfaultHandler.segfault();
+  segfaultHandler.segfault();
 }
 
 function main() {
-    segfaultHandler.registerHandler();
-    if (process.env['TEST_SEGFAULT']) {
-        foo();
-    }
+  segfaultHandler.registerHandler();
+  foo();
 }
 
 main();

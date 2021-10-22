@@ -14,7 +14,7 @@ void segfault_handler(int sig) {
   size_t frames_count = backtrace(stack_frames, MAX_STACK_FRAMES);
 
   if (frames_count == MAX_STACK_FRAMES) {
-      fprintf(stderr, "Stack trace too large, truncated to %llu frames.", frames_count);
+    fprintf(stderr, "Stack trace too large, truncated to %llu frames.", frames_count);
   }
 
   // print out all the frames to stderr
