@@ -1,6 +1,9 @@
 name: Develop branch push checks
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   build-module:

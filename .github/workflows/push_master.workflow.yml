@@ -1,6 +1,9 @@
 name: Main branch push checks
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build-module:
