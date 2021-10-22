@@ -4,10 +4,13 @@ description: Functional Tests
 runs:
   using: "composite"
   steps:
+    - run: sudo apt-get install libunwind
+      shell: bash
     - run: npm install
       shell: bash
     - run: |
         trap 'cat log.txt' err
-        bash ./.ci/scripts/test.sh
+        node tests/test.js 2> log.txt
+        cat log.txt | grep -P 'PID \d+ received a SIGSEGV'
         trap - err
       shell: bash

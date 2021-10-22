@@ -4,5 +4,7 @@ description: Build SegfaultHandler node module
 runs:
   using: "composite"
   steps:
+    - run: sudo apt-get install libunwind
+      shell: bash
     - run: npm install
       shell: bash
