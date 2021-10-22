@@ -1,0 +1,8 @@
+name: Functional Tests
+description: Functional Tests
+
+runs:
+  using: "composite"
+  steps:
+    - run: ./.ci/scripts/test.sh
+      shell: bash
