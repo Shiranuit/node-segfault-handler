@@ -4,6 +4,8 @@ description: Functional Tests
 runs:
   using: "composite"
   steps:
+    - run: npm install
+      shell: bash
     - run: |
         trap 'cat log.txt' err
         bash ./.ci/scripts/test.sh
