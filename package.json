@@ -1,5 +1,5 @@
 {
-  "name": "segfault-handler",
+  "name": "node-segfault-handler",
   "version": "1.0.0",
   "description": "A C++ Node.js module that helps gathering informations on segmentation fault",
   "main": "index.js",
