@@ -1,10 +1,10 @@
 {
   "name": "segfault-handler",
   "version": "1.0.0",
-  "description": "A C++ node-js module that shows the stacktrace of what's causing the segfault",
+  "description": "A C++ Node.js module that helps gathering informations on segmentation fault",
   "main": "index.js",
+  "keywords": ["linux", "alpine-linux", "segfault", "libunwind"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node-gyp build"
   },
   "repository": {
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/Shiranuit/node-segfault-handler.git"
   },
   "author": "Shiranuit",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/Shiranuit/node-segfault-handler/issues"
   },
