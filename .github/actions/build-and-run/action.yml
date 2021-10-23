@@ -23,7 +23,7 @@ runs:
         docker run segfault-handler-${{ inputs.IMAGE }}-${{ inputs.NODE_VERSION }} 2> log.txt || true;
         trap 'cat log.txt' err;
 
-        cat log.txt | grep -P 'Caught a Segmentation Fault [pid=\d+]'
+        cat log.txt | grep -P 'Caught a Segmentation Fault \[pid=\d+\]'
         && cat log.txt | grep -P grep -P '\[pc=0x.+, sp=0x.+\] in .+'
         && cat log.txt | grep -P grep -P 'at main \(.+\)'
         && cat log.txt | grep -P grep -P 'at foo \(.+\)'
