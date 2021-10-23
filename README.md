@@ -8,9 +8,12 @@ A C++ Node.js module that helps gathering informations on segmentation fault
 |:-----:|:------------:|:-------:|:-----:|
 | ✅    | ✅           |     ❓  | ❓    |
 
-## Install
+## Installation
 
-`npm install node-segfault-handler`
+### Node.js
+```
+npm install node-segfault-handler
+```
 ## Requirements
 
 This lib requires `libunwind-dev` to work
