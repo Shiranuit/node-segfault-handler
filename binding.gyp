@@ -3,9 +3,10 @@
     {
       "target_name": "SegfaultHandler",
       "include_dirs": [
-        "<!(node -e \"require('nan')\")"
+        "<!(node -e \"require('nan')\")",
+        "includes"
       ],
-      "sources": ["src/segfault-handler.cc"],
+      "sources": ["src/segfault-handler.cc", "src/backtrace.cc"],
       "cflags": [ "-O0", "-funwind-tables" ],
       "cflags_cc!": [ "-fno-exceptions" ],
       "conditions": [
@@ -13,6 +14,9 @@
           "libraries": [
             "-lunwind"
           ],
+          "defines": [
+            "__V8__"
+          ]
         }]
       ]
     }
