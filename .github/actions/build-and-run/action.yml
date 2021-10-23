@@ -20,7 +20,7 @@ runs:
           .
       shell: bash
     - run: |
-        docker run segfault-handler-${{ inputs.IMAGE }} 2> log.txt || true;
+        docker run segfault-handler-${{ inputs.IMAGE }}-${{ inputs.NODE_VERSION }} 2> log.txt || true;
         trap 'cat log.txt' err;
         cat log.txt | grep -P 'PID \d+ received a SIGSEGV';
         trap - err;
