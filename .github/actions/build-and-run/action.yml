@@ -30,6 +30,7 @@ runs:
         && (cat log.txt | grep -P 'at bar \(.+\)');
 
         trap - err;
+        cat log.txt;
       shell: bash  
       
 
