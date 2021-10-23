@@ -1,53 +1,64 @@
-#include <stdio.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <nan.h>
 
-#define UNW_LOCAL_ONLY
-#include <libunwind.h>
+#define __V8__
+#include "backtrace.hpp"
+
+// V8 Isolated context
+static v8::Isolate *isolate = nullptr;
 
 void segfault_handler(int sig) {
-  unw_cursor_t cursor;
-  unw_context_t context;
 
+  // Retrieve process ID
   pid_t pid = getpid();
-  // print out all the frames to stderr
-  fprintf(stderr, "PID %d received a SIGSEGV\n", pid);
-   // Initialize cursor to current frame for local unwinding.
-  unw_getcontext(&context);
-  unw_init_local(&cursor, &context);
 
-  // Unwind frames one by one, going up the frame stack.
-  while (unw_step(&cursor) > 0) {
-    unw_word_t offset, pc;
-    unw_get_reg(&cursor, UNW_REG_IP, &pc);
-    if (pc == 0) {
-      break;
-    }
-    fprintf(stderr, "0x%lx:", pc);
+  // Start printing frames
+  fprintf(stderr, "=========== Caught a Segmentation Fault [pid=%d] ===========\n", pid);
 
-    char sym[256];
-    if (unw_get_proc_name(&cursor, sym, sizeof(sym), &offset) == 0) {
-      fprintf(stderr, " (%s+0x%lx)\n", sym, offset);
-    } else {
-      fprintf(stderr," -- error: unable to obtain symbol name for this frame\n");
-    }
+  // Print native stacktraces
+  fprintf(stderr, "-----[ Native Stacktraces ]-----\n");
+  Backtrace::PrintNative();
+  
+  if (isolate != nullptr) {
+    fprintf(stderr, "\n---[ V8 JavaScript Stacktraces ]---\n");
+    // Print V8 stacktraces
+    Backtrace::PrintV8(isolate);
   }
+  fprintf(stderr, "============================================================\n");
+
   exit(1);
 }
 
+/**
+ * Print native stacktrace
+ */
+void PrintNativeStacktraces(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  Backtrace::PrintNative();
+}
+
+/**
+ * Initialize the segfault handler.
+ */
 void RegisterHandler(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  // Setup the signal handler
   signal(SIGSEGV, segfault_handler);
 }
 
+/**
+ * Causes the program to segfault
+ */
 void Segfault(const Nan::FunctionCallbackInfo<v8::Value>& info) {
   int *bad_ptr = (int*)-1; // make a bad pointer
   printf("%d\n", *bad_ptr); // causes segfault
 }
 
+/**
+ * When we initialize the module, we register the functions we want to exports
+ */
 void Init(v8::Local<v8::Object> exports) {
+  // Create an export context
   v8::Local<v8::Context> context = exports->CreationContext();
+  isolate = context->GetIsolate();
+  // Register the functions
   exports->Set(context,
                Nan::New("registerHandler").ToLocalChecked(),
                Nan::New<v8::FunctionTemplate>(RegisterHandler)->GetFunction(context).ToLocalChecked()
@@ -57,6 +68,11 @@ void Init(v8::Local<v8::Object> exports) {
               Nan::New("segfault").ToLocalChecked(),
               Nan::New<v8::FunctionTemplate>(Segfault)->GetFunction(context).ToLocalChecked()
             );
+
+  exports->Set(context,
+               Nan::New("printNativeStacktraces").ToLocalChecked(),
+               Nan::New<v8::FunctionTemplate>(PrintNativeStacktraces)->GetFunction(context).ToLocalChecked()
+              );
 }
 
 NODE_MODULE(segfault_handler, Init)
