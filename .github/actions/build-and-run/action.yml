@@ -1,0 +1,36 @@
+name: Build and Run
+description: Build and Run an image
+
+inputs:
+  IMAGE:
+    description: Docker image
+    required: true
+  NODE_VERSION:
+    description: Node.js version
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        docker build -t segfault-handler-${{ inputs.IMAGE }}-${{ inputs.NODE_VERSION }} \
+          -f ./docker/images/${{ inputs.IMAGE }}/Dockerfile \
+          --build-arg NODE_VERSION=${{ inputs.NODE_VERSION }} \
+          .
+      shell: bash
+    - run: |
+        docker run segfault-handler-${{ inputs.IMAGE }}-${{ inputs.NODE_VERSION }} 2> log.txt || true;
+        trap 'cat log.txt; exit 1' err;
+          
+        cat log.txt | grep -P 'Caught a Segmentation Fault \[pid=\d+\]' > /dev/null;
+        cat log.txt | grep -P '\[pc=0x.+, sp=0x.+\] in .+' > /dev/null;
+        cat log.txt | grep -P 'at main \(.+\)' > /dev/null;
+        cat log.txt | grep -P 'at foo \(.+\)' > /dev/null;
+        cat log.txt | grep -P 'at bar \(.+\)' > /dev/null;
+          
+        trap - err;
+      shell: bash  
+      
+
+    
