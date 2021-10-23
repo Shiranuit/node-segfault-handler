@@ -6,27 +6,13 @@ on:
       - develop
 
 jobs:
-  functional-tests:
-    name: Functional Tests - Node.js v${{ matrix.node-version }}
-    runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        node-version: ['14.17.0', '12.16.3', '12.20.0']
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: ./.github/actions/functional-tests
-
-  build-and-run:
-    needs: [functional-tests]
+  build-and-run-images:
     name: Build and Run ${{ matrix.image }} image - Node.js v${{ matrix.node-version }}
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        node-version: ['12.18.1']
-        image: ['alpine']
+        node-version: ['14.17.0', '12.16.3', '12.20.0']
+        image: ['alpine', 'base']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -35,3 +21,4 @@ jobs:
       - uses: ./.github/actions/build-and-run
         with:
           IMAGE: ${{ matrix.image }} 
+          NODE_VERSION: ${{ matrix.node-version }}
