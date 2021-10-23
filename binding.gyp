@@ -14,9 +14,6 @@
           "libraries": [
             "-lunwind"
           ],
-          "defines": [
-            "__V8__"
-          ]
         }]
       ]
     }
