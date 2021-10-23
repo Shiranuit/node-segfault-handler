@@ -5,16 +5,19 @@ inputs:
   IMAGE:
     description: Docker image
     required: true
+  NODE_VERSION:
+    description: Node.js version
+    required: true
 
 
 runs:
   using: "composite"
   steps:
-    - run: sudo apt-get install libunwind-dev
-      shell: bash
-    - run: npm install
-      shell: bash
-    - run: docker build -t segfault-handler-${{ inputs.IMAGE }} -f ./docker/images/${{ inputs.IMAGE }}/Dockerfile .
+    - run: |
+        docker build -t segfault-handler-${{ inputs.IMAGE }}-${{ inputs.NODE_VERSION }} \
+          -f ./docker/images/${{ inputs.IMAGE }}/Dockerfile \
+          --build-arg NODE_VERSION=${{ inputs.NODE_VERSION }} \
+          .
       shell: bash
     - run: |
         docker run segfault-handler-${{ inputs.IMAGE }} 2> log.txt || true;
