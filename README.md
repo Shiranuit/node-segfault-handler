@@ -10,7 +10,7 @@ A C++ Node.js module that helps gathering informations on segmentation fault
 
 ## Requirements
 
-There is only one dependency that should be installed on your system: `libunwind-dev`
+This lib requires `libunwind-dev` to work
 
 ## Usage
 
