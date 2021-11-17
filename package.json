@@ -1,9 +1,14 @@
 {
   "name": "node-segfault-handler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A C++ Node.js module that helps gathering informations on segmentation fault",
   "main": "index.js",
-  "keywords": ["linux", "alpine-linux", "segfault", "libunwind"],
+  "keywords": [
+    "linux",
+    "alpine-linux",
+    "segfault",
+    "libunwind"
+  ],
   "scripts": {
     "build": "node-gyp build"
   },
