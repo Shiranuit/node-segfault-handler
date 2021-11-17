@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "SegfaultHandler",
+      "target_name": "NodeSegfaultHandler",
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
         "includes"
@@ -12,8 +12,14 @@
       "conditions": [
         [ 'OS=="linux"', {
           "libraries": [
-            "-lunwind"
+            "<!(python3 -c 'from ctypes.util import find_library;print(find_library(\"unwind\")!=None and \"-lunwind\" or \"\")')"
           ],
+          "defines": [
+            "__V8__",
+            "<!(python3 -c 'from ctypes.util import find_library;print(find_library(\"unwind\")!=None and \"USE_LIBUNWIND=1\" or \"USE_LIBUNWIND=0\")')"
+          ]
+        }],
+        [ 'OS!="linux"', {
           "defines": [
             "__V8__"
           ]
