@@ -6,7 +6,7 @@ A C++ Node.js module that helps gathering informations on segmentation fault
 
 | Linux | Linux Alpine | Windows | MacOS |
 |:-----:|:------------:|:-------:|:-----:|
-| ✅    | ✅           |     ❓  | ❓    |
+| ✅    | ✅           |      ✅ | ✅    |
 
 ## Installation
 
@@ -16,7 +16,15 @@ npm install node-segfault-handler
 ```
 ## Requirements
 
-This lib requires `libunwind-dev` to work
+The library `libunwind-dev` is `optionnal`, if not present on your system the library `node-segfault-handler` will still compile but you wont have have the native stacktraces printed when a segfault occurs, you will only see the javascript stacktraces from V8.
+
+## Platforms
+### Linux
+If the library `libunwind-dev` is installed on your system, the library `node-segfault-handler` will be compiled with it and the native stacktraces will be printed when a segfault occurs.
+
+In all cases, if the library `libunwind-dev` is installed or not, you will still have the Javascript Stacktraces from V8 printed.
+### Other
+Native Stacktraces are always disabled on other OS than Linux, but you will still have the Javascript Stacktraces from V8 printed.
 
 ## Usage
 
