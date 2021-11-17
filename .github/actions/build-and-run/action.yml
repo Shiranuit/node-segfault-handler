@@ -24,7 +24,7 @@ runs:
         trap 'cat log.txt; exit 1' err;
           
         cat log.txt | grep -P 'Caught a Segmentation Fault \[pid=\d+\]' > /dev/null;
-        if [[ "{{ inputs.IMAGE }}" == *-no-libunwind ]]
+        if [[ "${{ inputs.IMAGE }}" == *-no-libunwind ]]
         then
           cat log.txt | grep -P '^Cannot unwind stacktraces: .+' > /dev/null;
         else
