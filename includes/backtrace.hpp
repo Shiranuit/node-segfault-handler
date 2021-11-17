@@ -8,7 +8,11 @@
 #include <cxxabi.h>
 
 #define UNW_LOCAL_ONLY
-#if USE_LIBUNWIND==1
+#if USE_LIBUNWIND==1 && __has_include(<libunwind.h>)
+#define NATIVE_STACKTRACE
+#endif
+
+#ifdef NATIVE_STACKTRACE
 #include <libunwind.h>
 #endif
 

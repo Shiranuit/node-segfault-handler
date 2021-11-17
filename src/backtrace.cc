@@ -4,7 +4,7 @@
  * Print native stack trace of current thread.
  */
 void Backtrace::PrintNative() {
-  #if USE_LIBUNWIND==1
+  #ifdef NATIVE_STACKTRACE
     unw_cursor_t cursor;
     unw_context_t context;
 
