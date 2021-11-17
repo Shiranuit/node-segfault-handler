@@ -21,7 +21,8 @@
         }],
         [ 'OS!="linux"', {
           "defines": [
-            "__V8__"
+            "__V8__",
+            "USE_LIBUNWIND=0"
           ]
         }]
       ]
