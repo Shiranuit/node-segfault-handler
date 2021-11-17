@@ -1,0 +1,20 @@
+ARG NODE_VERSION=12.16.3
+FROM node:${NODE_VERSION}
+
+RUN  set -x \
+  && apt update \
+  && apt install -y .gyp \
+      python \
+      make \
+      g++
+
+ADD . /var/app
+ADD ./docker/scripts/entrypoint.sh /bin/entrypoint
+
+WORKDIR /var/app
+
+RUN npm install --unsafe-perm
+RUN chmod +x /bin/entrypoint
+
+ENTRYPOINT [ "/bin/entrypoint" ]
+CMD ["node", "tests/test.js"]
