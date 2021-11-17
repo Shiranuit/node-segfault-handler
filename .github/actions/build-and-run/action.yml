@@ -24,7 +24,12 @@ runs:
         trap 'cat log.txt; exit 1' err;
           
         cat log.txt | grep -P 'Caught a Segmentation Fault \[pid=\d+\]' > /dev/null;
-        cat log.txt | grep -P '\[pc=0x.+, sp=0x.+\] in .+' > /dev/null;
+        if [[ "{{ inputs.IMAGE }}" == *-no-libunwind ]]
+        then
+          cat log.txt | grep -P '\[pc=0x.+, sp=0x.+\] in .+' > /dev/null;
+        else
+          cat log.txt | grep -P '^Cannot unwind stacktraces: .+' > /dev/null;
+        fi
         cat log.txt | grep -P 'at main \(.+\)' > /dev/null;
         cat log.txt | grep -P 'at foo \(.+\)' > /dev/null;
         cat log.txt | grep -P 'at bar \(.+\)' > /dev/null;
@@ -32,5 +37,4 @@ runs:
         trap - err;
       shell: bash  
       
-
     
