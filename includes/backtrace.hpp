@@ -8,7 +8,9 @@
 #include <cxxabi.h>
 
 #define UNW_LOCAL_ONLY
+#if USE_LIBUNWIND==1
 #include <libunwind.h>
+#endif
 
 #ifdef __V8__
   #include <nan.h>

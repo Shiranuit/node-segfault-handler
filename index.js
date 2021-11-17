@@ -1,4 +1,4 @@
-let segfaultHandler = require('bindings')('SegfaultHandler');
+let segfaultHandler = require('bindings')('NodeSegfaultHandler');
 
 module.exports = {
     registerHandler: segfaultHandler.registerHandler,
