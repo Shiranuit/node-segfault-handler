@@ -6,7 +6,9 @@ RUN  set -x \
   && apt install -y .gyp \
       python3 \
       make \
-      g++
+      g++ \
+      libunwind-dev \
+  && apt remove -y pkg-config 
 
 ADD . /var/app
 ADD ./docker/scripts/entrypoint.sh /bin/entrypoint

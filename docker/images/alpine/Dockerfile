@@ -3,7 +3,7 @@ FROM node:${NODE_VERSION}-alpine3.11
 
 RUN  set -x \
   && apk add --no-cache --no-progress --virtual .gyp \
-      python \
+      python3 \
       make \
       g++ \
       libunwind-dev
