@@ -12,11 +12,11 @@
       "conditions": [
         [ 'OS=="linux"', {
           "libraries": [
-            "<!(python -c 'from ctypes.util import find_library;print(find_library(\"unwind\")!=None and \"-lunwind\" or \"\")')"
+            "<!(pkg-config --libs libunwind 2> /dev/null || echo '')"
           ],
           "defines": [
             "__V8__",
-            "<!(python -c 'from ctypes.util import find_library;print(find_library(\"unwind\")!=None and \"USE_LIBUNWIND=1\" or \"USE_LIBUNWIND=0\")')"
+            "<!(pkg-config --libs libunwind 1>/dev/null 2>/dev/null && echo 'USE_LIBUNWIND=1' || echo 'USE_LIBUNWIND=0')"
           ]
         }],
         [ 'OS!="linux"', {
