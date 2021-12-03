@@ -6,7 +6,7 @@ A C++ Node.js module that helps gathering informations on segmentation fault
 
 | Linux | Linux Alpine | Windows | MacOS |
 |:-----:|:------------:|:-------:|:-----:|
-| ✅    | ✅           |      ❓ | ✅    |
+| ✅    | ✅           |      ✅ | ✅    |
 
 ## Installation
 
