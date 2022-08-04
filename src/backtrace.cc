@@ -6,7 +6,7 @@ char *demangle(char *name) {
     int status = 0;
     return abi::__cxa_demangle(name, NULL, NULL, &status);
   #elif USE_DEMANGLER==DEMANGLER_MSVC
-    return name;
+    return name; // TODO: implement MSVC demangler
   #else
     return name;
   #endif
