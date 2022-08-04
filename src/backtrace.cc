@@ -1,5 +1,18 @@
 #include "backtrace.hpp"
 
+#ifdef NATIVE_STACKTRACE
+char *demangle(char *name) {
+  #if USE_DEMANGLER==DEMANGLER_CXXABI
+    int status = 0;
+    return abi::__cxa_demangle(name, NULL, NULL, &status);
+  #elif USE_DEMANGLER==DEMANGLER_MSVC
+    return name;
+  #else
+    return name;
+  #endif
+}
+#endif // NATIVE_STACKTRACE
+
 /**
  * Print native stack trace of current thread.
  */
@@ -29,7 +42,7 @@ void Backtrace::PrintNative() {
       {
         int status = 0;
         // If cannot demangle name, use the symbol name
-        if ((name = abi::__cxa_demangle(symbol_name, NULL, NULL, &status)) == 0)
+        if ((name = demangle(symbol_name)) == 0)
         { // Failed to demangle symbol_name
           name = symbol_name;
         }

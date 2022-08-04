@@ -3,17 +3,36 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <cxxabi.h>
+
+#if !defined(_WIN32) && (defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)))
+  #include <unistd.h>
+#elif defined(_WIN32)
+  #include <process.h>
+  #define pid_t int
+#endif
+
+#define DEMANGLER_NONE 0
+#define DEMANGLER_CXXABI 1
+#define DEMANGLER_MSVC 2
+
+#define USE_DEMANGLER DEMANGLER_NONE
 
 #define UNW_LOCAL_ONLY
 #if USE_LIBUNWIND==1 && __has_include(<libunwind.h>)
-#define NATIVE_STACKTRACE
+  #define NATIVE_STACKTRACE
+  #if __has_include(<cxxabi.h>)
+    #include <cxxabi.h>
+    #define USE_DEMANGLER DEMANGLER_CXXABI
+  #elif defined(_WIN32)
+    #include "dbghelp.h"
+    #pragma comment(lib, "dbghelp.lib")
+    #define USE_DEMANGLER DEMANGLER_MSVC
+  #endif
 #endif
 
 #ifdef NATIVE_STACKTRACE
-#include <libunwind.h>
+  #include <libunwind.h>
 #endif
 
 #ifdef __V8__
