@@ -18,6 +18,12 @@ npm install node-segfault-handler
 
 The library `libunwind-dev` is `optionnal`, if not present on your system the library `node-segfault-handler` will still compile but you wont have have the native stacktraces printed when a segfault occurs, you will only see the javascript stacktraces from V8.
 
+### Compilation
+
+On Linux / MacOS you need to have `GCC` or `Clang` installed
+
+On Windows you need to have either `MSVC` or `MinGW` installed
+
 ## Platform Specifications
 ### Linux
 If the library `libunwind-dev` is installed on your system, the library `node-segfault-handler` will be compiled with it and the native stacktraces will be printed when a segfault occurs.
