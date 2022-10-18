@@ -12,7 +12,7 @@
       "conditions": [
         [ 'OS=="linux"', {
           "libraries": [
-            "<!(pkg-config --libs libunwind 2> /dev/null || echo '')"
+            "-Bstatic <!(pkg-config --libs libunwind 2> /dev/null || echo '')"
           ],
           "defines": [
             "__V8__",
