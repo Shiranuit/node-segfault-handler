@@ -5,6 +5,8 @@
 
 // V8 Isolated context
 static v8::Isolate *isolate = nullptr;
+static FILE *errOutputFile = stderr;
+static bool contextAlreadySet = false;
 
 void segfault_handler(int sig) {
 
@@ -12,18 +14,18 @@ void segfault_handler(int sig) {
   pid_t pid = getpid();
 
   // Start printing frames
-  fprintf(stderr, "=========== Caught a Segmentation Fault [pid=%d] ===========\n", pid);
+  fprintf(errOutputFile, "=========== Caught a Segmentation Fault [pid=%d] ===========\n", pid);
 
   // Print native stacktraces
-  fprintf(stderr, "-----[ Native Stacktraces ]-----\n");
-  Backtrace::PrintNative();
+  fprintf(errOutputFile, "-----[ Native Stacktraces ]-----\n");
+  Backtrace::PrintNative(errOutputFile);
   
   if (isolate != nullptr) {
-    fprintf(stderr, "\n---[ V8 JavaScript Stacktraces ]---\n");
+    fprintf(errOutputFile, "\n---[ V8 JavaScript Stacktraces ]---\n");
     // Print V8 stacktraces
-    Backtrace::PrintV8(isolate);
+    Backtrace::PrintV8(isolate, errOutputFile);
   }
-  fprintf(stderr, "============================================================\n");
+  fprintf(errOutputFile, "============================================================\n");
 
   exit(1);
 }
@@ -32,13 +34,40 @@ void segfault_handler(int sig) {
  * Print native stacktrace
  */
 void PrintNativeStacktraces(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Backtrace::PrintNative();
+  Backtrace::PrintNative(errOutputFile);
 }
 
 /**
  * Initialize the segfault handler.
  */
 void RegisterHandler(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  if (contextAlreadySet) {
+    Nan::ThrowTypeError("Cannot register handler twice");
+    return;
+  }
+
+  if (info.Length() > 0) {
+    if (info[0]->IsString()) {
+      auto path = info[0]->ToString(info.GetIsolate()->GetCurrentContext());
+      if (!path.IsEmpty()) {
+        Nan::Utf8String utfPath(info[0]);
+        std::string strUtfPath(*utfPath, utfPath.length());
+        errOutputFile = fopen(strUtfPath.c_str(), "w");
+        if (errOutputFile == nullptr) {
+          Nan::ThrowTypeError("Cannot open file");
+          return;
+        }
+      } else {
+        Nan::ThrowTypeError("Path must not be empty");
+        return;
+      }
+    } else if (!info[0]->IsUndefined()) {
+      Nan::ThrowTypeError("Expected a string");
+      return;
+    }
+  }
+
+  contextAlreadySet = true;
   // Setup the signal handler
   signal(SIGSEGV, segfault_handler);
 }

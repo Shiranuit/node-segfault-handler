@@ -10,6 +10,7 @@
     "libunwind"
   ],
   "scripts": {
+    "configure": "node-gyp configure",
     "build": "node-gyp build"
   },
   "repository": {
