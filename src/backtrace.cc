@@ -41,7 +41,6 @@ void Backtrace::PrintNative(FILE *file) {
       char *name = symbol_name;
       if (unw_get_proc_name(&cursor, symbol_name, sizeof(symbol_name), &offset) == 0)
       {
-        int status = 0;
         // If cannot demangle name, use the symbol name
         if ((name = demangle(symbol_name)) == 0)
         { // Failed to demangle symbol_name
