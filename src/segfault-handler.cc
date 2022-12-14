@@ -26,6 +26,7 @@ void segfault_handler(int sig) {
     Backtrace::PrintV8(isolate, errOutputFile);
   }
   fprintf(errOutputFile, "============================================================\n");
+  fclose(errOutputFile);
 
   exit(1);
 }
