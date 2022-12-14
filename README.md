@@ -36,14 +36,17 @@ Native Stacktraces are always disabled on other OS than Linux, but you will stil
 
 ## Usage
 
-```js
+```ts
 let segfaultHandler = require('node-segfault-handler');
 
 /**
  * Once a segfault occurs, 
- * stacktraces from V8 and native stacktraces will be printed to the STDERR
+ * stacktraces from V8 and native stacktraces will be printed to the STDERR or you can provide a path to write to.
+ * 
+ * @param path File path, if null write to stderr
  */ 
-segfaultHandler.registerHandler();
+segfaultHandler.registerHandler(path: string?);
+
 
 // Simulate a segfault from a native module
 segfaultHandler.segfault();
