@@ -7,9 +7,10 @@ jobs:
     name: Build and Run ${{ matrix.image }} image - Node.js v${{ matrix.node-version }}
     runs-on: ubuntu-18.04
     strategy:
+      fail-fast: false
       matrix:
         node-version: ['12.22.7', '14.18.1', '16.13.0']
-        image: ['alpine', 'base', 'base-no-libunwind', 'base-partial-no-libunwind', 'base-no-pkg-config']
+        image: ['alpine', 'base', 'base-no-libunwind', 'base-partial-no-libunwind', 'base-no-pkg-config', 'base-static-linking']
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
