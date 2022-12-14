@@ -10,6 +10,7 @@
     "libunwind"
   ],
   "scripts": {
+    "configure": "node-gyp configure",
     "build": "node-gyp build"
   },
   "repository": {
@@ -27,6 +28,7 @@
     "nan": "^2.15.0"
   },
   "files": [
+    "index.d.ts",
     "index.js",
     "src/*",
     "includes/*",

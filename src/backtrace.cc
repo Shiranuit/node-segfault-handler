@@ -16,7 +16,8 @@ char *demangle(char *name) {
 /**
  * Print native stack trace of current thread.
  */
-void Backtrace::PrintNative() {
+void Backtrace::PrintNative(FILE *file) {
+
   #ifdef NATIVE_STACKTRACE
     unw_cursor_t cursor;
     unw_context_t context;
@@ -34,7 +35,7 @@ void Backtrace::PrintNative() {
       unw_get_reg(&cursor, UNW_REG_IP, &instruction_pointer);
       unw_get_reg(&cursor, UNW_REG_SP, &stack_pointer);
 
-      fprintf(stderr, "[pc=0x%016lx, sp=0x%016lx] ", instruction_pointer, stack_pointer);
+      fprintf(file, "[pc=0x%016lx, sp=0x%016lx] ", instruction_pointer, stack_pointer);
 
       char symbol_name[256] = {"<unknown symbol>"};
       char *name = symbol_name;
@@ -47,10 +48,10 @@ void Backtrace::PrintNative() {
         }
       }
 
-      fprintf(stderr, "in %s+0x%lx\n", name, offset);
+      fprintf(file, "in %s+0x%lx\n", name, offset);
     }
   #else
-    fprintf(stderr, "Cannot unwind stacktraces: Feature disabled / Missing libunwind on your system\n");
+    fprintf(file, "Cannot unwind stacktraces: Feature disabled / Missing libunwind on your system\n");
   #endif
 }
 
@@ -59,7 +60,7 @@ void Backtrace::PrintNative() {
 /**
  * Print V8 stack trace of isolated context.
  */ 
-void Backtrace::PrintV8(v8::Isolate *isolate) {
+void Backtrace::PrintV8(v8::Isolate *isolate, FILE *file) {
   // Retrieve current stacktraces from isolate
   v8::Local<v8::StackTrace> traces = v8::StackTrace::CurrentStackTrace(isolate, 255);
   for (int i = 0; i < traces->GetFrameCount(); i++) {
@@ -71,7 +72,7 @@ void Backtrace::PrintV8(v8::Isolate *isolate) {
     v8::String::Utf8Value scriptName(isolate, frame->GetScriptName());
     int lineNumber = frame->GetLineNumber();
     int column = frame->GetColumn();
-    fprintf(stderr, "at %s (%s:%d:%d)\n", *funcName, *scriptName, lineNumber, column);
+    fprintf(file, "at %s (%s:%d:%d)\n", *funcName, *scriptName, lineNumber, column);
   }
 }
 

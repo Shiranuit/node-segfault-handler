@@ -41,10 +41,10 @@
 
 class Backtrace {
   public:
-    static void PrintNative();
+    static void PrintNative(FILE *file);
     
     #ifdef __V8__
-      static void PrintV8(v8::Isolate *isolate);
+      static void PrintV8(v8::Isolate *isolate, FILE *file);
     #endif // __V8__
 };
 
