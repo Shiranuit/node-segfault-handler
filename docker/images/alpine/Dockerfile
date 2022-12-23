@@ -1,5 +1,5 @@
 ARG NODE_VERSION=12.16.3
-FROM node:${NODE_VERSION}-alpine3.11
+FROM node:${NODE_VERSION}
 
 RUN  set -x \
   && apk add --no-cache --no-progress --virtual .gyp \

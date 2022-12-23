@@ -86,7 +86,12 @@ void Segfault(const Nan::FunctionCallbackInfo<v8::Value>& info) {
  */
 void Init(v8::Local<v8::Object> exports) {
   // Create an export context
-  v8::Local<v8::Context> context = exports->GetCreationContext().FromMaybe(v8::Local<v8::Context>());
+  #if NODE_MODULE_VERSION >=93 // Node >=16
+    v8::Local<v8::Context> context = exports->GetCreationContext().FromMaybe(v8::Local<v8::Context>())
+  #else
+    v8::Local<v8::Context> context = exports->CreationContext();
+  #endif
+
   isolate = context->GetIsolate();
   // Register the functions
   exports->Set(context,
