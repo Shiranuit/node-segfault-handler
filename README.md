@@ -26,11 +26,6 @@ On Linux / MacOS you need to have `GCC` or `Clang` installed
 
 On Windows you need to have either `MSVC` or `MinGW` installed
 
-### Linking of libunwind
-| Linux | Linux Alpine | Windows | MacOS |
-|:-----:|:------------:|:-------:|:-----:|
-| Static    | Dynamic           |      None | None    |
-
 ## Platform Specifications
 ### Linux & Linux Alpine
 If the library `libunwind-dev` is installed on your system, the library `node-segfault-handler` will be compiled with it and the native stacktraces will be printed when a segfault occurs.
