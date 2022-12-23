@@ -10,12 +10,29 @@ jobs:
     name: Build and Run ${{ matrix.image }} image - Node.js v${{ matrix.node-version }}
     runs-on: ubuntu-18.04
     strategy:
+      fail-fast: false
       matrix:
-        node-version: ['12.22.7', '14.18.1', '16.13.0']
-        image: ['alpine', 'base', 'base-no-libunwind', 'base-partial-no-libunwind', 'base-no-pkg-config', 'base-static-linking']
+        node-version: ['12.22.7', '14.18.1', '16.13.0', '18.12.1']
+        image: ['base', 'base-no-libunwind', 'base-partial-no-libunwind', 'base-no-pkg-config']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: ./.github/actions/build-and-run
+        with:
+          IMAGE: ${{ matrix.image }} 
+          NODE_VERSION: ${{ matrix.node-version }}
+
+  build-and-run-alpine-images:
+    name: Build and Run ${{ matrix.image }} image - Node.js v${{ matrix.node-version }}
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['12.22.12-alpine3.15', '14.18.1-alpine3.14', '16.13.0-alpine3.14', '18.12.1-alpine3.16']
+        image: ['alpine']
+    steps:
+      - uses: actions/checkout@v2
         with:
           node-version: ${{ matrix.node-version }}
       - uses: ./.github/actions/build-and-run

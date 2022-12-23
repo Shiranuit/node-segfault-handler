@@ -3,7 +3,7 @@ FROM node:${NODE_VERSION} as builder
 
 RUN  set -x \
   && apt update \
-  && apt install -y .gyp \
+  && apt install -y gyp \
       python3 \
       make \
       g++ \
