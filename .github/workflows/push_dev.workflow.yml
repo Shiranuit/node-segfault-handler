@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['12.22.12-alpine3.15', '14.18.1-alpihe3.14', '16.13.0-3.14', '18.12.1-alpine3.16', '19.3.0-alpine3.17']
+        node-version: ['12.22.12-alpine3.15', '14.18.1-alpine3.14', '16.13.0-alpine3.14', '18.12.1-alpine3.16', '19.3.0-alpine3.17']
         image: ['alpine']
     steps:
       - uses: actions/checkout@v2
