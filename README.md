@@ -10,10 +10,14 @@ A C++ Node.js module that helps gathering informations on segmentation fault
 
 ## Installation
 
-### Node.js
+```bash
+sudo apt install pkg-config libunwind-dev
+```
+
 ```
 npm install node-segfault-handler
 ```
+
 ## Requirements
 
 The library `libunwind-dev` is `optionnal`, if not present on your system the library `node-segfault-handler` will still compile but you wont have have the native stacktraces printed when a segfault occurs, you will only see the javascript stacktraces from V8.
