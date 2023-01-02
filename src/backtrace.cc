@@ -61,6 +61,11 @@ void Backtrace::PrintNative(FILE *file) {
  * Print V8 stack trace of isolated context.
  */ 
 void Backtrace::PrintV8(v8::Isolate *isolate, FILE *file) {
+  if (isolate == nullptr) {
+    fprintf(file, "Cannot print V8 stacktraces: Isolate is null\n");
+    return;
+  }
+
   // Retrieve current stacktraces from isolate
   v8::Local<v8::StackTrace> traces = v8::StackTrace::CurrentStackTrace(isolate, 255);
   for (int i = 0; i < traces->GetFrameCount(); i++) {
