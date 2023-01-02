@@ -4,11 +4,10 @@
 #include "backtrace.hpp"
 
 // V8 Isolated context
-static v8::Isolate *isolate = nullptr;
 static FILE *errOutputFile = stderr;
 static bool contextAlreadySet = false;
 
-void segfault_handler(int sig) {
+void segfault_handler(int sig) {  
 
   // Retrieve process ID
   pid_t pid = getpid();
@@ -20,11 +19,10 @@ void segfault_handler(int sig) {
   fprintf(errOutputFile, "-----[ Native Stacktraces ]-----\n");
   Backtrace::PrintNative(errOutputFile);
   
-  if (isolate != nullptr) {
-    fprintf(errOutputFile, "\n---[ V8 JavaScript Stacktraces ]---\n");
-    // Print V8 stacktraces
-    Backtrace::PrintV8(isolate, errOutputFile);
-  }
+  fprintf(errOutputFile, "\n---[ V8 JavaScript Stacktraces ]---\n");
+  // Print V8 stacktraces
+  Backtrace::PrintV8(Nan::GetCurrentContext()->GetIsolate(), errOutputFile);
+  
   fprintf(errOutputFile, "============================================================\n");
   fclose(errOutputFile);
 
@@ -34,14 +32,14 @@ void segfault_handler(int sig) {
 /**
  * Print native stacktrace
  */
-void PrintNativeStacktraces(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+NAN_METHOD(PrintNativeStacktraces) {
   Backtrace::PrintNative(errOutputFile);
 }
 
 /**
  * Initialize the segfault handler.
  */
-void RegisterHandler(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+NAN_METHOD(RegisterHandler) {
   if (contextAlreadySet) {
     Nan::ThrowTypeError("Cannot register handler twice");
     return;
@@ -76,7 +74,7 @@ void RegisterHandler(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 /**
  * Causes the program to segfault
  */
-void Segfault(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+NAN_METHOD(Segfault) {
   int *bad_ptr = (int*)-1; // make a bad pointer
   printf("%d\n", *bad_ptr); // causes segfault
 }
@@ -84,30 +82,23 @@ void Segfault(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 /**
  * When we initialize the module, we register the functions we want to exports
  */
-void Init(v8::Local<v8::Object> exports) {
-  // Create an export context
-  #if NODE_MODULE_VERSION >= 93 // Node >=16
-    v8::Local<v8::Context> context = exports->GetCreationContext().FromMaybe(v8::Local<v8::Context>());
-  #else
-    v8::Local<v8::Context> context = exports->CreationContext();
-  #endif
-
-  isolate = context->GetIsolate();
+NAN_MODULE_INIT(Init) {
   // Register the functions
-  exports->Set(context,
-               Nan::New("registerHandler").ToLocalChecked(),
-               Nan::New<v8::FunctionTemplate>(RegisterHandler)->GetFunction(context).ToLocalChecked()
-              );
-
-  exports->Set(context,
-              Nan::New("segfault").ToLocalChecked(),
-              Nan::New<v8::FunctionTemplate>(Segfault)->GetFunction(context).ToLocalChecked()
-            );
-
-  exports->Set(context,
-               Nan::New("printNativeStacktraces").ToLocalChecked(),
-               Nan::New<v8::FunctionTemplate>(PrintNativeStacktraces)->GetFunction(context).ToLocalChecked()
-              );
+  Nan::Set(
+    target,
+    Nan::New<v8::String>("registerHandler").ToLocalChecked(),
+    Nan::GetFunction(Nan::New<v8::FunctionTemplate>(RegisterHandler)).ToLocalChecked()
+  );
+  Nan::Set(
+    target,
+    Nan::New<v8::String>("segfault").ToLocalChecked(),
+    Nan::GetFunction(Nan::New<v8::FunctionTemplate>(Segfault)).ToLocalChecked()
+  );
+  Nan::Set(
+    target,
+    Nan::New<v8::String>("printNativeStacktraces").ToLocalChecked(),
+    Nan::GetFunction(Nan::New<v8::FunctionTemplate>(PrintNativeStacktraces)).ToLocalChecked()
+  );
 }
 
 NODE_MODULE(segfault_handler, Init)
