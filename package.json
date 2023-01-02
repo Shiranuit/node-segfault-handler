@@ -1,6 +1,6 @@
 {
   "name": "node-segfault-handler",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "A C++ Node.js module that helps gathering informations on segmentation fault",
   "main": "index.js",
   "keywords": [
